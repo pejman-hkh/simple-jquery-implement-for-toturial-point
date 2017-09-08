@@ -74,12 +74,21 @@
 
 		jQuery.fn.html = function( a ) {
 
-			html = '';
-			this.eq(0).each(function(  ) {
-				html = this.innerHTML;
-			});
+			if( typeof a === 'undefined' ) {
+				html = '';
+				this.eq(0).each(function(  ) {
+					html = this.innerHTML;
+				});
 
-			return html;
+				return html;			
+			} else {
+
+				this.each(function(  ) {
+					this.innerHTML = a;
+				});
+
+			}
+
 		}
 
 		Utils.each( [  "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
@@ -114,6 +123,7 @@
 		$(".test").click(function() {
 			alert( $(this).html() );
 
+			$(this).html('changed');
 		}).eq(0).trigger("click")
 	});
 
