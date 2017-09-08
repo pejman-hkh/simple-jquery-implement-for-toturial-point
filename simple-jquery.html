@@ -75,11 +75,8 @@
 		jQuery.fn.html = function( a ) {
 
 			html = '';
-			this.each(function( k ) {
-				if( k == 0 ){
-					html = this.innerHTML;
-					return;	
-				} 
+			this.eq(0).each(function(  ) {
+				html = this.innerHTML;
 			});
 
 			return html;
@@ -117,7 +114,7 @@
 		$(".test").click(function() {
 			alert( $(this).html() );
 
-		}).eq(1).trigger("click")
+		}).eq(0).trigger("click")
 	});
 
 	$(".test").each(function() {
