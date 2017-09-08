@@ -25,12 +25,14 @@
 
 		jQuery.fn = jQuery.prototype;
 
-		jQuery.fn.set_selector = function( a ) {
+		jQuery.fn.init = function( a ) {
 			this.selector = a;
 			if( typeof a === "function" ) {
 				this.selector = window;
 				return this.load( a );
-			}			
+			}
+
+			return this;		
 		}
 
 		jQuery.fn.each = function( a ) {
@@ -124,12 +126,9 @@
 				get_instance();
 			}
 
-			jQuery_instance.set_selector( a );
-	
-			return jQuery_instance;
+			return jQuery_instance.init( a );
 		}
 
-		$.fn = $.prototype;
 
 		window.$ = $;
 		window.jQuery = jQuery;
