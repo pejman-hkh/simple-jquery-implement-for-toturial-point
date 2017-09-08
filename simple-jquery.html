@@ -8,8 +8,6 @@
 
 
 <script type="text/javascript">
-	
-
 	(function( window ) {
 
 		var Utils = {
@@ -76,19 +74,37 @@
 
 			if( typeof a === 'undefined' ) {
 				html = '';
-				this.eq(0).each(function(  ) {
+				this.eq(0).each(function() {
 					html = this.innerHTML;
 				});
 
 				return html;			
 			} else {
 
-				return this.each(function(  ) {
+				return this.each(function() {
 					this.innerHTML = a;
 				});
 
 			}
 		}
+
+		jQuery.fn.attr = function( a, b ) {
+			if( typeof b === 'undefined' ) {
+				var out = '';
+				this.eq(0).each(function() {
+					out = this.getAttribute( a );
+				});
+
+				return out;			
+			} else {
+
+				return this.each(function(  ) {
+					this.setAttribute( a, b );
+				});
+
+			}
+		}
+
 
 		Utils.each( [  "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
 			jQuery.fn[ name ] = function( a ) {
@@ -113,30 +129,43 @@
 			return jQuery_instance;
 		}
 
+		$.fn = $.prototype;
+
 		window.$ = $;
+		window.jQuery = jQuery;
 
 	})( window );
 
-	$(function() {
+	//plugin ...
+	(function( $ ) {
+		$.fn.hasClass = function( a ) {
+			alert('In hasClass');
 
-		$(".test").click(function() {
+			return this;
+		}
+	})( jQuery );
+
+
+	$(function() {
+		$(".test").hasClass("test").click(function() {
 			alert( $(this).html() );
 
 			$(this).html('changed');
+
+			alert( $(this).attr('class') );
+
 		}).eq(0).trigger("click");
 
 
 		$(".test").each(function() {
 			alert( $(this).html() );
 		});
-
-
 	});
 
 </script>
 
 
-<div class="test">test1</div>
+<div class="test ppp">test1</div>
 
 <div class="test">test2</div>
 
