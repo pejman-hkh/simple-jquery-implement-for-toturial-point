@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+</head>
+<body>
+
+
+<script type="text/javascript">
+	
+
+	(function( window ) {
+
+		var Utils = {
+			each : function( object, a ) {
+				for( i = 0; i < object.length; i++ ) {
+					a.call( object[i], i, object[i] );
+				}
+			}
+		}
+
+		function jQuery() {
+			this.selector = '';
+		}
+
+		jQuery.fn = jQuery.prototype;
+
+		jQuery.fn.set_selector = function( a ) {
+			this.selector = a;
+			if( typeof a === "function" ) {
+				this.selector = window;
+				return this.load( a );
+			}			
+		}
+
+		jQuery.fn.each = function( a ) {
+
+			pass = this.selector;
+			if( typeof this.selector == "string" ) {
+				pass = document.querySelectorAll( this.selector );
+			} else if( typeof this.selector == "object" ) {
+				pass = [this.selector];
+			}
+
+			Utils.each( pass, a );		
+
+			return this;
+		}
+
+		jQuery.fn.on = function( event, a ) {
+			return this.each(function() {
+				this.addEventListener( event, a );
+			});				
+		}
+
+		jQuery.fn.trigger = function( a ) {
+			var event = new MouseEvent( a , {
+				'view': window,
+				'bubbles': true,
+				'cancelable': true
+			} );
+
+			return this.each(function() {
+				return this.dispatchEvent( event );
+			});
+		}
+
+		jQuery.fn.eq = function( a ) {
+			this.selector = document.querySelectorAll( this.selector )[a];
+			return this;
+		}
+
+		jQuery.fn.html = function( a ) {
+
+			html = '';
+			this.each(function( k ) {
+				if( k == 0 ){
+					html = this.innerHTML;
+					return;	
+				} 
+			});
+
+			return html;
+		}
+
+		Utils.each( [  "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
+			jQuery.fn[ name ] = function( a ) {
+				return this.on( name, a );
+			};
+		});
+
+
+		var jQuery_instance;
+
+		function get_instance() {
+			jQuery_instance = new jQuery();
+		}
+
+		function $( a ) {
+			if( typeof jQuery_instance === 'undefined' ) {
+				get_instance();
+			}
+
+			jQuery_instance.set_selector( a );
+	
+			return jQuery_instance;
+		}
+
+		window.$ = $;
+
+	})( window );
+
+	$(function() {
+
+		$(".test").click(function() {
+			alert( $(this).html() );
+
+		}).eq(0).trigger("click")
+	});
+
+	$(".test").each(function() {
+		alert('test');
+	});
+
+</script>
+
+
+<div class="test">test1</div>
+
+<div class="test">test2</div>
+
+
+</body>
+
+
+</html>
