@@ -22,6 +22,7 @@
 
 		function jQuery() {
 			this.selector = '';
+			this.selected = [];
 		}
 
 		jQuery.fn = jQuery.prototype;
@@ -36,14 +37,14 @@
 
 		jQuery.fn.each = function( a ) {
 
-			pass = this.selector;
+			this.selected = this.selector;
 			if( typeof this.selector == "string" ) {
-				pass = document.querySelectorAll( this.selector );
+				this.selected = document.querySelectorAll( this.selector );
 			} else if( typeof this.selector == "object" ) {
-				pass = [this.selector];
+				this.selected = [this.selector];
 			}
 
-			Utils.each( pass, a );		
+			Utils.each( this.selected, a );		
 
 			return this;
 		}
@@ -67,7 +68,7 @@
 		}
 
 		jQuery.fn.eq = function( a ) {
-			this.selector = document.querySelectorAll( this.selector )[a];
+			this.selector = this.selected[a];
 			return this;
 		}
 
@@ -116,7 +117,7 @@
 		$(".test").click(function() {
 			alert( $(this).html() );
 
-		}).eq(0).trigger("click")
+		}).eq(1).trigger("click")
 	});
 
 	$(".test").each(function() {
