@@ -120,6 +120,26 @@
 			}
 		}
 
+		jQuery.fn.parent = function() {
+			var that = this;
+			return this.eq(0).each(function() {
+				that.set_selector( this.parentElement );
+			});
+		}
+
+		jQuery.fn.next = function() {
+			var that = this;
+			return this.eq(0).each(function() {
+				that.set_selector( this.nextElementSibling );
+			});
+		}
+
+		jQuery.fn.prev = function() {
+			var that = this;
+			return this.eq(0).each(function() {
+				that.set_selector( this.previousElementSibling );
+			});
+		}
 
 		jQuery.fn.css = function( a, b ) {
 			if( typeof b === 'undefined' ) {
@@ -325,6 +345,12 @@
 			console.log( $(this).html() );
 		})
 
+		console.log( $("#test").next().html() );
+		console.log( $("#test").prev().html() );
+
+		$("#test").parent().prev().next().find("span").each(function() {
+			console.log( this );
+		});
 
 	});
 
@@ -346,10 +372,17 @@
 
 
 <div class="test1">
-<span>span value</span>
-<span>span value1</span>
+	<span>span value</span>
+	<span>span value1</span>
 </div>
 
+<div class="dddd">
+	<div id="test">
+
+	</div>
+
+	<div>next<span>asdas</span></div>
+</div>
 
 </body>
 
