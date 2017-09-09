@@ -7,17 +7,6 @@
 <body>
 
 
-<form action="post">
-	<input type="text" name="test" />
-	<input type="submit" value="submit" />
-</form>
-
-<div class="test ppp">test1</div>
-<br />
-<div class="test">test2</div>
-<br />
-<div class="test">test3</div>
-
 
 <script type="text/javascript">
 	(function( window ) {
@@ -56,6 +45,7 @@
 					break;
 				}
 			}
+
 			return this;
 		}
 
@@ -108,7 +98,7 @@
 				});
 
 			}
-		}		
+		}
 
 
 		jQuery.fn.css = function( a, b ) {
@@ -128,22 +118,67 @@
 			}
 		}
 
-		jQuery.fn.on = function( event, a ) {
+		jQuery.fn.data = function( a, b ) {
+
+			if( typeof a === 'undefined' ) {
+				var ret;
+				this.each(function() {
+					ret = this.data || "";
+				});
+
+				return ret;
+			} else if( typeof b === 'undefined' ) {
+
+				var ret;
+				this.eq(0).each(function() {
+					if( typeof this.data === 'undefined'  ) {
+						this.data = {};
+					}
+
+					ret = this.data[ a ];
+
+				});
+
+				return ret;	
+			} else {
+
+				return this.each(function() {
+					if( typeof this.data === 'undefined'  ) {
+						this.data = {};
+					}
+					
+					this.data[a] = b;
+				});				
+			}
+		}
+
+		jQuery.fn.bind = function( event, callback ) {
 			return this.each(function() {
+
+				var p_event = $(this).data( "event_"+event ) || [];
+	
+				p_event[ p_event.length ] = callback;
+
+
+				$(this).data( "event_"+event,  p_event );
+
 				var that = this;
 				this.addEventListener( event, function( e ) {
-					if( ! a.call( that, e ) ) {
+					if( ! callback.call( that, e ) ) {
 						e.preventDefault();
 					}
 				});
 			});				
 		}
 
-		jQuery.fn.bind = jQuery.fn.on;
-
-		jQuery.fn.unbind = function( a ) {
+		jQuery.fn.unbind = function( event ) {
 			return this.each(function() {
-				this.removeEventListener( a, function() {});
+				var events = $(this).data( "event_"+event );
+
+				var x;
+				for( x in events ) {
+					this.removeEventListener( event, events[x] );
+				}
 			});
 		}
 
@@ -152,7 +187,7 @@
 				'view': window,
 				'bubbles': true,
 				'cancelable': true
-			} );
+			});
 
 			return this.each(function() {
 				return this.dispatchEvent( event );
@@ -161,7 +196,7 @@
 
 		jQuery.each( [ "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
 			jQuery.fn[ name ] = function( a ) {
-				return this.on( name, a );
+				return this.bind( name, a );
 			};
 		});
 
@@ -221,7 +256,7 @@
 
 	//Define plugin outsize closure
 	$.fn.test = function() {
-		console.log('in test');
+		//console.log('in test');
 	};
 
 	//Use with jQuery instead $
@@ -231,28 +266,31 @@
 	//Dom ready
 	$(function() {
 
-		$(".test").each(function() {
-			console.log('in each');
-			console.log( $(this).html() );
-		
-		});
-
 		$(".test").css( "background", "red" ).click(function() {
 			
-			console.log( $(this).attr('class') );
+			//console.log( $(this).attr('class') );
 
 			if( $(this).hasClass("ppp") ) {
-				console.log('Class ppp exist');
+				//console.log('Class ppp exist');
 			}
 
-			console.log( $(this).html() );
+			//console.log( $(this).html() );
 
 			$(this).html('changed');
 
-			console.log( $(this).attr('class') );
+			//console.log( $(this).attr('class') );
 
 		}).eq(1).trigger("click");
 
+
+		$(".test").each(function() {
+
+			//console.log('in each');
+			//console.log( $(this).html() );
+
+			$(this).unbind('click');
+		
+		});
 
 
 		$("form").submit(function() {
@@ -261,9 +299,25 @@
 
 			return false;
 		});
+
+
+
 	});
 
 </script>
+
+
+<form action="post">
+	<input type="text" name="test" />
+	<input type="submit" value="submit" />
+</form>
+
+<div class="test ppp">test1</div>
+<br />
+<div class="test">test2</div>
+<br />
+<div class="test">test3</div>
+
 
 
 </body>
