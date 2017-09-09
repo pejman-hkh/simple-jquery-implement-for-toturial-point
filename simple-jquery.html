@@ -10,14 +10,6 @@
 <script type="text/javascript">
 	(function( window ) {
 
-		var Utils = {
-			each : function( object, a ) {
-				for( i = 0; i < object.length; i++ ) {
-					a.call( object[i], i, object[i] );
-				}
-			}
-		}
-
 		function jQuery( a ) {
 			this.selector = a;
 
@@ -31,6 +23,12 @@
 
 		jQuery.fn = jQuery.prototype;
 
+		jQuery.each = function( object, a ) {
+			for( i = 0; i < object.length; i++ ) {
+				a.call( object[i], i, object[i] );
+			}
+		}
+
 
 		jQuery.fn.each = function( a ) {
 
@@ -42,7 +40,7 @@
 			}
 
 			if( typeof a !== 'undefined' )
-				Utils.each( this.selected, a );		
+				jQuery.each( this.selected, a );		
 
 			return this;
 		}
@@ -123,7 +121,7 @@
 			}
 		}
 
-		Utils.each( [  "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
+		jQuery.each( [  "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
 			jQuery.fn[ name ] = function( a ) {
 				return this.on( name, a );
 			};
@@ -175,7 +173,7 @@
 
 	//Define plugin outsize closure
 	$.fn.test = function() {
-		console.log('test');
+		console.log('in test');
 	};
 
 	//Use with jQuery instead $
