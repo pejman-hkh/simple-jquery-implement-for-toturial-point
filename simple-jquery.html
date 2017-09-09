@@ -90,13 +90,13 @@
 		}
 
 		jQuery.fn.append = function( a ) {
-			this.each(function() {
+			return this.each(function() {
 				this.innerHTML = this.innerHTML + a;
 			});
 		}
 		
 		jQuery.fn.prepend = function( a ) {
-			this.each(function() {
+			return this.each(function() {
 				this.innerHTML = a + this.innerHTML;
 			});
 		}
@@ -160,11 +160,18 @@
 		jQuery.fn.css = function( a, b ) {
 			if( typeof b === 'undefined' ) {
 				var ret = '';
-				this.eq(0).each(function() {
-					ret = this.style[ a ];
+				this.each(function() {
+					if( typeof a === 'object' ) {
+						for( var x in a ) {
+							this.style[x] = a[x];
+						}
+					} else {
+						ret = this.style[ a ];
+						return;
+					}
 				});
 
-				return ret;			
+				return typeof a === 'object' ? this : ret;			
 			} else {
 
 				return this.each(function(  ) {
@@ -307,7 +314,7 @@
 	});
 
 	$.test = function() {
-		
+
 	}
 
 	jQuery.test();
@@ -320,26 +327,39 @@
 	//Use with jQuery instead $
 	jQuery(".test").test();
 
+	$.fn.timeOut = function( callback, time ) {
+
+		var that = this;
+		setTimeout(function() {
+			callback.call( that );
+		
+		}, time);
+
+		return this;
+	}
 
 	//Dom ready
 	$(function() {
 
-		$(".test").css( "background", "red" ).click(function() {
-			console.log( this );
+		$(".test").css( "background", "blue" ).timeOut(function() {
+			return this.css( { background : "red" } ).click(function() {
+				console.log( this );
 
-			//console.log( $(this).attr('class') );
+				//console.log( $(this).attr('class') );
 
-			if( $(this).hasClass("ppp") ) {
-				//console.log('Class ppp exist');
-			}
+				if( $(this).hasClass("ppp") ) {
+					//console.log('Class ppp exist');
+				}
 
-			//console.log( $(this).html() );
+				//console.log( $(this).html() );
 
-			$(this).html('changed');
+				$(this).html('changed');
 
-			//console.log( $(this).attr('class') );
+				//console.log( $(this).attr('class') );
 
-		}).eq(1).trigger("click");
+			}).eq(1).trigger("click");
+
+		}, 2000 );
 
 		$(".test").each(function() {
 
