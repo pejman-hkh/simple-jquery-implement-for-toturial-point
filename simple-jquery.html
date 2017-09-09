@@ -37,6 +37,27 @@
 			return this;
 		}
 
+		jQuery.fn.find = function( selector ) {
+
+			var finded = [];
+			var i = 0;
+
+			this.each(function( k ) {
+
+				var pselect = this.querySelectorAll( selector );
+
+				var x;
+				for( x in pselect ) {
+					if( typeof pselect[x] === 'object' )
+						finded[i++] = pselect[x];
+				}
+			});
+		
+			this.selected = finded;
+
+			return this;
+		}
+
 		jQuery.each = function( object, callback ) {
 
 			var len = object.length;
@@ -79,7 +100,6 @@
 				return this.each(function() {
 					this.innerHTML = a;
 				});
-
 			}
 		}
 
@@ -167,7 +187,6 @@
 
 				$(this).data( "event_"+event,  p_event );
 
-				
 				this.addEventListener( event, p_callback);
 			});				
 		}
@@ -243,7 +262,7 @@
 			this.each(function(){
 				var data = new FormData( this );
 
-				for(var pair of data.entries()) {
+				for( var pair of data.entries() ) {
 				   ret[ pair[0] ] = pair[1];
 				}				
 			});
@@ -266,7 +285,6 @@
 
 	//Dom ready
 	$(function() {
-		__binded = 
 
 		$(".test").css( "background", "red" ).click(function() {
 			console.log( this );
@@ -303,6 +321,10 @@
 		});
 
 
+		$(".test1").find("span").each(function() {
+			console.log( $(this).html() );
+		})
+
 
 	});
 
@@ -313,6 +335,7 @@
 	<input type="text" name="test" />
 	<input type="submit" value="submit" />
 </form>
+<br />
 
 <div class="test ppp">test1</div>
 <br />
@@ -320,6 +343,12 @@
 <br />
 <div class="test">test3</div>
 
+
+
+<div class="test1">
+<span>span value</span>
+<span>span value1</span>
+</div>
 
 
 </body>
