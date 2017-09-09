@@ -156,19 +156,18 @@
 			return this.each(function() {
 
 				var p_event = $(this).data( "event_"+event ) || [];
-				
+
+				p_event[ p_event.length ] = p_callback;
+				var that = this;	
 				function p_callback( e ) {
 					if( ! callback.call( that, e ) ) {
 						e.preventDefault();
 					}
 				}
 
-				p_event[ p_event.length ] = p_callback;
-
-
 				$(this).data( "event_"+event,  p_event );
 
-				var that = this;
+				
 				this.addEventListener( event, p_callback);
 			});				
 		}
@@ -270,7 +269,8 @@
 		__binded = 
 
 		$(".test").css( "background", "red" ).click(function() {
-			
+			console.log( this );
+
 			//console.log( $(this).attr('class') );
 
 			if( $(this).hasClass("ppp") ) {
