@@ -156,18 +156,20 @@
 			return this.each(function() {
 
 				var p_event = $(this).data( "event_"+event ) || [];
-	
-				p_event[ p_event.length ] = callback;
+				
+				function p_callback( e ) {
+					if( ! callback.call( that, e ) ) {
+						e.preventDefault();
+					}
+				}
+
+				p_event[ p_event.length ] = p_callback;
 
 
 				$(this).data( "event_"+event,  p_event );
 
 				var that = this;
-				this.addEventListener( event, function( e ) {
-					if( ! callback.call( that, e ) ) {
-						e.preventDefault();
-					}
-				});
+				this.addEventListener( event, p_callback);
 			});				
 		}
 
@@ -178,7 +180,7 @@
 				var x;
 				for( x in events ) {
 					this.removeEventListener( event, events[x] );
-				}
+				}				
 			});
 		}
 
@@ -265,8 +267,7 @@
 
 	//Dom ready
 	$(function() {
-
-		$(".test").css( "background", "red" ).click(function() {
+		__binded = function() {
 			
 			//console.log( $(this).attr('class') );
 
@@ -280,8 +281,11 @@
 
 			//console.log( $(this).attr('class') );
 
-		}).eq(1).trigger("click");
+		}
 
+		$(".test").css( "background", "red" ).click( __binded ).eq(1).trigger("click");
+
+		$(".test").unbind('click', __binded );
 
 		$(".test").each(function() {
 
