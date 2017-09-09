@@ -129,16 +129,24 @@
 			return jQuery_instance.init( a );
 		}
 
+		$.fn = $.prototype;
+		$.fn = jQuery.fn;
 
 		window.$ = $;
-		window.jQuery = jQuery;
+		window.jQuery = $;
 
 	})( window );
+
+	$.fn.test = function() {
+		alert('test');
+	};
+
+	jQuery(".test").test();
 
 	//plugin ...
 	(function( $ ) {
 		$.fn.hasClass = function( a ) {
-			alert('In hasClass');
+			console.log('In hasClass');
 
 			return this;
 		}
@@ -147,17 +155,17 @@
 
 	$(function() {
 		$(".test").hasClass("test").click(function() {
-			alert( $(this).html() );
+			console.log( $(this).html() );
 
 			$(this).html('changed');
 
-			alert( $(this).attr('class') );
+			console.log( $(this).attr('class') );
 
 		}).eq(0).trigger("click");
 
 
 		$(".test").each(function() {
-			alert( $(this).html() );
+			console.log( $(this).html() );
 		});
 	});
 
