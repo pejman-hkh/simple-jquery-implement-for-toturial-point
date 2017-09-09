@@ -18,22 +18,19 @@
 			}
 		}
 
-		function jQuery() {
-			this.selector = '';
-			this.selected = [];
-		}
-
-		jQuery.fn = jQuery.prototype;
-
-		jQuery.fn.init = function( a ) {
+		function jQuery( a ) {
 			this.selector = a;
+
 			if( typeof a === "function" ) {
 				this.selector = window;
 				return this.load( a );
 			}
 
-			return this;		
+			return this.each();
 		}
+
+		jQuery.fn = jQuery.prototype;
+
 
 		jQuery.fn.each = function( a ) {
 
@@ -44,7 +41,8 @@
 				this.selected = [this.selector];
 			}
 
-			Utils.each( this.selected, a );		
+			if( typeof a !== 'undefined' )
+				Utils.each( this.selected, a );		
 
 			return this;
 		}
@@ -125,7 +123,6 @@
 			}
 		}
 
-
 		Utils.each( [  "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
 			jQuery.fn[ name ] = function( a ) {
 				return this.on( name, a );
@@ -133,52 +130,76 @@
 		});
 
 
-		var jQuery_instance;
-
-		function get_instance() {
-			jQuery_instance = new jQuery();
-		}
-
 		function $( a ) {
-			if( typeof jQuery_instance === 'undefined' ) {
-				get_instance();
-			}
 
-			return jQuery_instance.init( a );
+			return new jQuery( a );
 		}
 
-		$.fn = $.prototype;
 		$.fn = jQuery.fn;
 
 		window.$ = window.jQuery = $;
 
 	})( window );
 
-	$.fn.test = function() {
-		alert('test');
-	};
-
-	jQuery(".test").test();
-
-	//plugin ...
 	(function( $ ) {
-		$.fn.hasClass = function( a ) {
-			console.log('In hasClass');
+		$.inArray = function( val, array ) {
+			for( x in array ) {
 
-			return this;
+				if( array[x] === val ) {
+					return x;
+				}
+			}
+
+			return -1;
 		}
+
+		$.fn.hasClass = function( a ) {
+			var ret;
+			this.eq(0).each(function() {
+				var classes = $(this).attr("class").split(/\s+/g);
+
+				if( $.inArray( a, classes ) !== -1 ) {
+					ret = true;
+				} else {
+					ret = false;	
+				}
+
+			});
+
+			return ret;
+		}
+
 	})( jQuery );
 
 
+
+	//Define plugin outsize closure
+	$.fn.test = function() {
+		console.log('test');
+	};
+
+	//Use with jQuery instead $
+	jQuery(".test").test();
+
+
+	//Dom ready
 	$(function() {
-		$(".test").css("background", "red").hasClass("test").click(function() {
+
+		$(".test").css( "background", "red" ).click(function() {
+			
+			console.log( $(this).attr('class') );
+
+			if( $(this).hasClass("ppp") ) {
+				console.log('Class ppp exist');
+			}
+
 			console.log( $(this).html() );
 
 			$(this).html('changed');
 
 			console.log( $(this).attr('class') );
 
-		}).eq(0).trigger("click");
+		}).eq(1).trigger("click");
 
 
 		$(".test").each(function() {
@@ -190,7 +211,7 @@
 
 
 <div class="test ppp">test1</div>
-
+<br />
 <div class="test">test2</div>
 
 
