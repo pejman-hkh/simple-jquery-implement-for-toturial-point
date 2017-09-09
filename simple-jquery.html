@@ -105,6 +105,24 @@
 				});
 
 			}
+		}		
+
+
+		jQuery.fn.css = function( a, b ) {
+			if( typeof b === 'undefined' ) {
+				var out = '';
+				this.eq(0).each(function() {
+					out = this.style[ a ];
+				});
+
+				return out;			
+			} else {
+
+				return this.each(function(  ) {
+					this.style[ a ] =  b;
+				});
+
+			}
 		}
 
 
@@ -132,8 +150,7 @@
 		$.fn = $.prototype;
 		$.fn = jQuery.fn;
 
-		window.$ = $;
-		window.jQuery = $;
+		window.$ = window.jQuery = $;
 
 	})( window );
 
@@ -154,7 +171,7 @@
 
 
 	$(function() {
-		$(".test").hasClass("test").click(function() {
+		$(".test").css("background", "red").hasClass("test").click(function() {
 			console.log( $(this).html() );
 
 			$(this).html('changed');
