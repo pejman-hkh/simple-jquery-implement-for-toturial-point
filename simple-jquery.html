@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>jQuery implement</title>
-
 </head>
 <body>
 <script type="text/javascript">
@@ -67,6 +66,15 @@
 			return this;
 		}
 
+		jQuery.inArray = function( val, array ) {
+			for( x in array ) {
+				if( array[x] === val ) {
+					return x;
+				}
+			}
+
+			return -1;
+		}
 
 		jQuery.fn.each = function( a ) {
 
@@ -251,22 +259,15 @@
 			return new jQuery( a );
 		}
 
-		$.fn = jQuery.fn;
+		for( var x in jQuery ) {
+			$[x] = jQuery[x];
+		}
 
 		window.$ = window.jQuery = $;
 
 	})( window );
 
 	(function( $ ) {
-		$.inArray = function( val, array ) {
-			for( x in array ) {
-				if( array[x] === val ) {
-					return x;
-				}
-			}
-
-			return -1;
-		}
 
 		$.fn.hasClass = function( a ) {
 			var ret;
@@ -300,6 +301,16 @@
 	})( jQuery );
 
 
+	$.each([1,2,3,4], function( k, v ) {
+		console.log( k );
+		console.log( v );
+	});
+
+	$.test = function() {
+		
+	}
+
+	jQuery.test();
 
 	//Define plugin outside closure
 	$.fn.test = function() {
