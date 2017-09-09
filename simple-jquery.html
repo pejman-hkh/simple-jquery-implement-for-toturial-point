@@ -42,8 +42,7 @@
 
 				var pselect = this.querySelectorAll( selector );
 
-				var x;
-				for( x in pselect ) {
+				for( var x in pselect ) {
 					if( typeof pselect[x] === 'object' )
 						finded[i++] = pselect[x];
 				}
@@ -67,7 +66,7 @@
 		}
 
 		jQuery.inArray = function( val, array ) {
-			for( x in array ) {
+			for( var x in array ) {
 				if( array[x] === val ) {
 					return x;
 				}
