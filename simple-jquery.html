@@ -267,7 +267,9 @@
 
 	//Dom ready
 	$(function() {
-		__binded = function() {
+		__binded = 
+
+		$(".test").css( "background", "red" ).click(function() {
 			
 			//console.log( $(this).attr('class') );
 
@@ -281,18 +283,14 @@
 
 			//console.log( $(this).attr('class') );
 
-		}
-
-		$(".test").css( "background", "red" ).click( __binded ).eq(1).trigger("click");
-
-		$(".test").unbind('click', __binded );
+		}).eq(1).trigger("click");
 
 		$(".test").each(function() {
 
 			//console.log('in each');
 			//console.log( $(this).html() );
 
-			$(this).unbind('click');
+			//$(this).unbind('click');
 		
 		});
 
