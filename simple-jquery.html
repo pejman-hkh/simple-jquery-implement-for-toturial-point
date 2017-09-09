@@ -79,12 +79,23 @@
 			return this;
 		}
 
-
 		jQuery.fn.eq = function( a ) {
 			this.selector = this.selected[a];
 			return this;
 		}
 
+		jQuery.fn.append = function( a ) {
+			this.each(function() {
+				this.innerHTML = this.innerHTML + a;
+			});
+		}
+		
+		jQuery.fn.prepend = function( a ) {
+			this.each(function() {
+				this.innerHTML = a + this.innerHTML;
+			});
+		}
+		
 		jQuery.fn.html = function( a ) {
 
 			if( typeof a === 'undefined' ) {
@@ -194,16 +205,15 @@
 
 		jQuery.fn.bind = function( event, callback ) {
 			return this.each(function() {
-
-				var p_event = $(this).data( "event_"+event ) || [];
-
-				p_event[ p_event.length ] = p_callback;
 				var that = this;	
 				function p_callback( e ) {
 					if( ! callback.call( that, e ) ) {
 						e.preventDefault();
 					}
 				}
+
+				var p_event = $(this).data( "event_"+event ) || [];
+				p_event[ p_event.length ] = p_callback;
 
 				$(this).data( "event_"+event,  p_event );
 
@@ -352,6 +362,9 @@
 			console.log( this );
 		});
 
+
+		$("#test").append("<div>aaaa</div>");
+		$("#test").prepend("<div>bbbbbb</div>");
 	});
 
 </script>
