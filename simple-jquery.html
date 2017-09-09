@@ -7,37 +7,60 @@
 <body>
 
 
+<form action="post">
+	<input type="text" name="test" />
+	<input type="submit" value="submit" />
+</form>
+
+<div class="test ppp">test1</div>
+<br />
+<div class="test">test2</div>
+<br />
+<div class="test">test3</div>
+
+
 <script type="text/javascript">
 	(function( window ) {
 
 		function jQuery( a ) {
-			this.selector = a;
 
 			if( typeof a === "function" ) {
-				this.selector = window;
-				return this.load( a );
+				return this.set_selector( window ).load( a );
+			} else {
+				return this.set_selector( a );
 			}
-
-			return this.each();
 		}
 
 		jQuery.fn = jQuery.prototype;
 
-		jQuery.each = function( object, a ) {
-			for( i = 0; i < object.length; i++ ) {
-				a.call( object[i], i, object[i] );
-			}
-		}
+		jQuery.fn.set_selector = function( a ) {
 
+			this.selector = a;
 
-		jQuery.fn.each = function( a ) {
-
-			this.selected = this.selector;
 			if( typeof this.selector == "string" ) {
 				this.selected = document.querySelectorAll( this.selector );
 			} else if( typeof this.selector == "object" ) {
 				this.selected = [this.selector];
+			} else {
+				this.selected = this.selector;
 			}
+
+			return this;
+		}
+
+		jQuery.each = function( object, callback ) {
+
+			var len = object.length;
+			for( var i = 0; i < len; i++ ) {
+				if( callback.call( object[i], i, object[i] ) === false ) {
+					break;
+				}
+			}
+			return this;
+		}
+
+
+		jQuery.fn.each = function( a ) {
 
 			if( typeof a !== 'undefined' )
 				jQuery.each( this.selected, a );		
@@ -45,23 +68,6 @@
 			return this;
 		}
 
-		jQuery.fn.on = function( event, a ) {
-			return this.each(function() {
-				this.addEventListener( event, a );
-			});				
-		}
-
-		jQuery.fn.trigger = function( a ) {
-			var event = new MouseEvent( a , {
-				'view': window,
-				'bubbles': true,
-				'cancelable': true
-			} );
-
-			return this.each(function() {
-				return this.dispatchEvent( event );
-			});
-		}
 
 		jQuery.fn.eq = function( a ) {
 			this.selector = this.selected[a];
@@ -71,7 +77,8 @@
 		jQuery.fn.html = function( a ) {
 
 			if( typeof a === 'undefined' ) {
-				html = '';
+				var html = '';
+
 				this.eq(0).each(function() {
 					html = this.innerHTML;
 				});
@@ -89,7 +96,7 @@
 		jQuery.fn.attr = function( a, b ) {
 			if( typeof b === 'undefined' ) {
 				var out = '';
-				this.eq(0).each(function() {
+				this.each(function() {
 					out = this.getAttribute( a );
 				});
 
@@ -107,7 +114,7 @@
 		jQuery.fn.css = function( a, b ) {
 			if( typeof b === 'undefined' ) {
 				var out = '';
-				this.eq(0).each(function() {
+				this.each(function() {
 					out = this.style[ a ];
 				});
 
@@ -121,7 +128,38 @@
 			}
 		}
 
-		jQuery.each( [  "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
+		jQuery.fn.on = function( event, a ) {
+			return this.each(function() {
+				var that = this;
+				this.addEventListener( event, function( e ) {
+					if( ! a.call( that, e ) ) {
+						e.preventDefault();
+					}
+				});
+			});				
+		}
+
+		jQuery.fn.bind = jQuery.fn.on;
+
+		jQuery.fn.unbind = function( a ) {
+			return this.each(function() {
+				this.removeEventListener( a, function() {});
+			});
+		}
+
+		jQuery.fn.trigger = function( a ) {
+			var event = new MouseEvent( a , {
+				'view': window,
+				'bubbles': true,
+				'cancelable': true
+			} );
+
+			return this.each(function() {
+				return this.dispatchEvent( event );
+			});
+		}
+
+		jQuery.each( [ "focusin", "focusout", "load", "beforeunload", "unload", "change", "click", "dblclick", "focus", "blur", "reset", "submit", "resize", "scroll", "mouseover", "mouseout", "mouseup", "mousedown", "mouseenter", "mousemove", "mouseleave", "contextmenu", "wheel", "keydown", "keypress", "keyup", "select" ], function( k, name ) {
 			jQuery.fn[ name ] = function( a ) {
 				return this.on( name, a );
 			};
@@ -150,7 +188,7 @@
 
 		$.fn.hasClass = function( a ) {
 			var ret;
-			this.eq(0).each(function() {
+			this.each(function() {
 				var classes = $(this).attr("class").split(/\s+/g);
 
 				if( $.inArray( a, classes ) !== -1 ) {
@@ -159,6 +197,19 @@
 					ret = false;	
 				}
 
+			});
+
+			return ret;
+		}
+
+		$.fn.serialize = function() {
+			var ret = {};
+			this.each(function(){
+				var data = new FormData( this );
+
+				for(var pair of data.entries()) {
+				   ret[ pair[0] ] = pair[1];
+				}				
 			});
 
 			return ret;
@@ -180,6 +231,12 @@
 	//Dom ready
 	$(function() {
 
+		$(".test").each(function() {
+			console.log('in each');
+			console.log( $(this).html() );
+		
+		});
+
 		$(".test").css( "background", "red" ).click(function() {
 			
 			console.log( $(this).attr('class') );
@@ -197,17 +254,16 @@
 		}).eq(1).trigger("click");
 
 
-		$(".test").each(function() {
-			console.log( $(this).html() );
+
+		$("form").submit(function() {
+
+			console.log( $(this).serialize() );
+
+			return false;
 		});
 	});
 
 </script>
-
-
-<div class="test ppp">test1</div>
-<br />
-<div class="test">test2</div>
 
 
 </body>
