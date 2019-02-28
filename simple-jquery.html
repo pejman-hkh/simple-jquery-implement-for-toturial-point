@@ -9,15 +9,15 @@
 
 		function jQuery( a ) {
 			if( typeof a === "function" ) {
-				return this.set_selector( window ).load( a );
+				return this.setSelector( window ).load( a );
 			} else {
-				return this.set_selector( a );
+				return this.setSelector( a );
 			}
 		}
 
 		jQuery.fn = jQuery.prototype;
 
-		jQuery.fn.set_selector = function( a ) {
+		jQuery.fn.setSelector = function( a ) {
 			this.selector = a;
 
 			if( typeof this.selector == "string" ) {
@@ -45,18 +45,15 @@
 		jQuery.fn.find = function( selector ) {
 
 			var finded = [];
-			var i = 0;
-
 			this.each(function( k ) {
-
 				var pselect = this.querySelectorAll( selector );
 
 				for( var x in pselect ) {
 					if( typeof pselect[x] === 'object' )
-						finded[i++] = pselect[x];
+						finded.push(pselect[x]);
 				}
 			});
-		
+
 			this.selected = finded;
 
 			return this;
@@ -112,13 +109,7 @@
 		jQuery.fn.html = function( a ) {
 
 			if( typeof a === 'undefined' ) {
-				var ret = '';
-
-				this.eq(0).each(function() {
-					ret = this.innerHTML;
-				});
-
-				return ret;			
+				return this.selected[0].innerHTML;
 			} else {
 
 				return this.each(function() {
@@ -129,12 +120,7 @@
 
 		jQuery.fn.attr = function( a, b ) {
 			if( typeof b === 'undefined' ) {
-				var ret = '';
-				this.eq(0).each(function() {
-					ret = this.getAttribute( a );
-				});
-
-				return ret;			
+				return this.selected[0].getAttribute(a);
 			} else {
 
 				return this.each(function(  ) {
@@ -145,24 +131,15 @@
 		}
 
 		jQuery.fn.parent = function() {
-			var that = this;
-			return this.eq(0).each(function() {
-				that.set_selector( this.parentElement );
-			});
+			return jQuery( this.selected[0].parentElement );
 		}
 
 		jQuery.fn.next = function() {
-			var that = this;
-			return this.eq(0).each(function() {
-				that.set_selector( this.nextElementSibling );
-			});
+			return jQuery( this.selected[0].nextElementSibling );
 		}
 
 		jQuery.fn.prev = function() {
-			var that = this;
-			return this.eq(0).each(function() {
-				that.set_selector( this.previousElementSibling );
-			});
+			return jQuery( this.selected[0].previousElementSibling );
 		}
 
 		jQuery.fn.css = function( a, b ) {
@@ -340,6 +317,12 @@
 	//Dom ready
 	$(function() {
 
+		console.log( $("#test").prev().html() );
+		console.log( $("#test").find(".ast").html() );
+		console.log( $("#test").prev().attr('class') );
+		console.log( $("#test").parent() );
+		console.log( $("#test").next() );
+
 		$(".test").css( "background", "blue" ).timeOut(function() {
 			return this.css( { background : "red" } ).click(function() {
 				console.log( this );
@@ -416,7 +399,10 @@
 </div>
 
 <div class="dddd">
+	<div class="aaa">aaaa</div>
 	<div id="test">
+
+		<div class="ast">ast</div>
 
 	</div>
 
