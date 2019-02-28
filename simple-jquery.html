@@ -8,7 +8,6 @@
 	(function( window ) {
 
 		function jQuery( a ) {
-
 			if( typeof a === "function" ) {
 				return this.set_selector( window ).load( a );
 			} else {
@@ -19,7 +18,6 @@
 		jQuery.fn = jQuery.prototype;
 
 		jQuery.fn.set_selector = function( a ) {
-
 			this.selector = a;
 
 			if( typeof this.selector == "string" ) {
@@ -33,6 +31,17 @@
 			return this;
 		}
 
+
+		function $( a ) {
+			return new jQuery( a );
+		}
+
+		$.fn = jQuery.fn;
+		window.$ = window.jQuery = $;
+
+	})( window );
+
+	(function($) {
 		jQuery.fn.find = function( selector ) {
 
 			var finded = [];
@@ -261,17 +270,7 @@
 			};
 		});
 
-		function $( a ) {
-			return new jQuery( a );
-		}
-
-		for( var x in jQuery ) {
-			$[x] = jQuery[x];
-		}
-
-		window.$ = window.jQuery = $;
-
-	})( window );
+	})(jQuery);
 
 	(function( $ ) {
 
