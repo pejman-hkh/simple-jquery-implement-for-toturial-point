@@ -20,12 +20,12 @@
 		jQuery.fn.setSelector = function( a ) {
 			this.selector = a;
 
-			if( typeof this.selector == "string" ) {
-				this.selected = document.querySelectorAll( this.selector );
-			} else if( typeof this.selector == "object" ) {
-				this.selected = [this.selector];
+			if( typeof a == "string" ) {
+				this.selected = document.querySelectorAll( a );
+			} else if( typeof a == "object" && ! Array.isArray( a ) ) {
+				this.selected = [a];
 			} else {
-				this.selected = this.selector;
+				this.selected = a;
 			}
 
 			return this;
@@ -42,6 +42,7 @@
 	})( window );
 
 	(function($) {
+
 		jQuery.fn.find = function( selector ) {
 
 			var finded = [];
@@ -54,11 +55,21 @@
 				}
 			});
 
-			this.selected = finded;
-
-			return this;
+			return jQuery( finded );
 		}
 
+		jQuery.fn.children = function() {
+
+			var childs = [];
+			this.each(function() {
+				for( let x of this.children ) {
+					childs.push( x );
+				}
+			});
+	
+			return jQuery( childs );
+		}
+		
 		jQuery.each = function( object, callback ) {
 
 			var len = object.length;
@@ -284,8 +295,8 @@
 
 
 	$.each([1,2,3,4], function( k, v ) {
-		console.log( k );
-		console.log( v );
+		//console.log( k );
+		//console.log( v );
 	});
 
 	$.test = function() {
@@ -316,7 +327,17 @@
 
 	//Dom ready
 	$(function() {
+		$("#test").children().each(function() {
+			//alert('test');
+			console.log( this );
+		});
 
+		$("#test").find(".ast").each(function() {
+			console.log( this );
+		});
+
+		console.log( $("#test").children() );
+		console.log( $("#test").find(".ast") );
 		console.log( $("#test").prev().html() );
 		console.log( $("#test").find(".ast").html() );
 		console.log( $("#test").prev().attr('class') );
@@ -403,6 +424,8 @@
 	<div id="test">
 
 		<div class="ast">ast</div>
+		<div class="ast">ast11</div>
+		<div class="ast">ast2222</div>
 
 	</div>
 
