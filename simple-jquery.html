@@ -55,7 +55,7 @@
 				}
 			});
 
-			return jQuery( finded );
+			return this.setSelector( finded );
 		}
 
 		jQuery.fn.children = function() {
@@ -67,7 +67,7 @@
 				}
 			});
 	
-			return jQuery( childs );
+			return this.setSelector( childs );
 		}
 		
 		jQuery.each = function( object, callback ) {
@@ -142,15 +142,15 @@
 		}
 
 		jQuery.fn.parent = function() {
-			return jQuery( this.selected[0].parentElement );
+			return this.setSelector( this.selected[0].parentElement );
 		}
 
 		jQuery.fn.next = function() {
-			return jQuery( this.selected[0].nextElementSibling );
+			return this.setSelector( this.selected[0].nextElementSibling );
 		}
 
 		jQuery.fn.prev = function() {
-			return jQuery( this.selected[0].previousElementSibling );
+			return this.setSelector( this.selected[0].previousElementSibling );
 		}
 
 		jQuery.fn.css = function( a, b ) {
